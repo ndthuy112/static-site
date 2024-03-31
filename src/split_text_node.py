@@ -13,7 +13,7 @@ def split_nodes_image(old_nodes):
     output = []
     for old_node in old_nodes:
         matches = extract_markdown_images(old_node.text)
-        if matches is None:
+        if matches == []:
             output.append(old_node)
             continue
         remaining_text = old_node.text
@@ -21,18 +21,23 @@ def split_nodes_image(old_nodes):
             text_to_match = f"![{match[0]}]({match[1]})"
             temporary_split = remaining_text.split(text_to_match, 1)
             if temporary_split[0] != "":
-                output.append(TextNode(temporary_split[0], old_node.text_type))
+                output.append(TextNode(temporary_split[0], old_node.text_type, old_node.url))
             output.append(TextNode(match[0], TextType.Images, match[1]))
             remaining_text = temporary_split[1]
         if remaining_text != "":
-            output.append(TextNode(remaining_text, old_node.text_type))
+            output.append(TextNode(remaining_text, old_node.text_type, old_node.url))
     return output
 
 def split_node_link(old_nodes):
     output = []
     for old_node in old_nodes:
+        # because link pattern matches image pattern!
+        #if old_node.text_type == TextType.Images:
+            #output.append(old_node)
+            #continue
+        
         matches = extract_markdown_links(old_node.text)
-        if matches is None:
+        if matches == []:
             output.append(old_node)
             continue
         remaining_text = old_node.text
@@ -40,11 +45,11 @@ def split_node_link(old_nodes):
             text_to_match = f"[{match[0]}]({match[1]})"
             temporary_split = remaining_text.split(text_to_match, 1)
             if temporary_split[0] != "":
-                output.append(TextNode(temporary_split[0], old_node.text_type))
+                output.append(TextNode(temporary_split[0], old_node.text_type, old_node.url))
             output.append(TextNode(match[0], TextType.Links, match[1]))
             remaining_text = temporary_split[1]
         if remaining_text != "":
-            output.append(TextNode(remaining_text, old_node.text_type))
+            output.append(TextNode(remaining_text, old_node.text_type, old_node.url))
     return output
 
 
@@ -63,3 +68,18 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             else:
                 output.append(TextNode(split_text[i], text_type, old_node.url))
     return output
+
+def text_to_textnodes(txt):
+    return split_node_link(
+        split_nodes_image(
+            split_nodes_delimiter(
+                split_nodes_delimiter(
+                    split_nodes_delimiter([TextNode(txt, TextType.Normal)], '**', TextType.Bold),
+                    '*',
+                    TextType.Italic
+                ),
+                '`',
+                TextType.Code
+            )
+        )
+    )

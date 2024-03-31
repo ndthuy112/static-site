@@ -1,5 +1,5 @@
 import unittest
-from split_text_node import extract_markdown_images, extract_markdown_links, split_nodes_image, split_node_link, split_nodes_delimiter
+from split_text_node import extract_markdown_images, extract_markdown_links, split_nodes_image, split_node_link, split_nodes_delimiter, text_to_textnodes
 from textnode import TextNode, TextType
 
 class TestSplitTextNode(unittest.TestCase):
@@ -66,5 +66,23 @@ class TestSplitTextNode(unittest.TestCase):
                 TextNode("bold", TextType.Bold),
                 TextNode(" word and an *italic* word", TextType.Normal),
                 "Hello, world"
+            ]
+        )
+
+    def test_split_all(self):
+        text1 = "This is **text** with an *italic* word and a `code block` and an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://boot.dev)"
+        self.assertEqual(
+            text_to_textnodes(text1),
+            [
+                TextNode("This is ", TextType.Normal),
+                TextNode("text", TextType.Bold),
+                TextNode(" with an ", TextType.Normal),
+                TextNode("italic", TextType.Italic),
+                TextNode(" word and a ", TextType.Normal),
+                TextNode("code block", TextType.Code),
+                TextNode(" and an ", TextType.Normal),
+                TextNode("image", TextType.Images, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and a ", TextType.Normal),
+                TextNode("link", TextType.Links, "https://boot.dev"),
             ]
         )
