@@ -7,3 +7,12 @@ class TextType(Enum):
     Code = 4
     Links = 5
     Images = 6
+
+
+class BlockType(Enum):
+    Paragraph = 1
+    Heading = 2
+    Code = 3
+    Quote = 4
+    UnorderedList = 5
+    OrderedList = 6

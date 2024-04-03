@@ -1,6 +1,6 @@
 from textnode import TextNode, text_node_to_html_node
 from enum_types import TextType
-from split_text_node import text_to_textnodes
+from inline import text_to_textnodes
 
 
 def main():
