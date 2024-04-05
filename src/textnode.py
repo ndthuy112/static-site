@@ -2,7 +2,7 @@ from enum_types import TextType
 from htmlnode import LeafNode
 
 class TextNode:
-    def __init__(self, text, text_type, url=None):
+    def __init__(self, text:str, text_type:TextType, url=None):
         self.text = text
         self.text_type = text_type
         self.url = url
@@ -15,7 +15,7 @@ class TextNode:
     
 
 
-def text_node_to_html_node(text_node):
+def text_node_to_html_node(text_node:TextNode) -> LeafNode:
     if text_node.text_type == TextType.Normal:
         return LeafNode(None, text_node.text)
     elif text_node.text_type == TextType.Bold:

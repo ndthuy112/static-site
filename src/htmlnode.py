@@ -17,7 +17,10 @@ class HTMLNode:
         return output
     
     def __repr__(self):
-        return f"Tag: {self.tag}\nValue: {self.value}\nChildren: {self.children}\nProps: {self.props_to_html()}"
+        return f"# Tag: {self.tag}\nValue: {self.value}\nChildren: {self.children}\nProps: {self.props_to_html()} #"
+
+    def __eq__(self, other):
+        return self.__repr__() == other.__repr__()
 
 
 class ParentNode(HTMLNode):
@@ -34,7 +37,7 @@ class ParentNode(HTMLNode):
             output += child.to_html()
         output += f"</{self.tag}>"
         return output
-
+    
 
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):

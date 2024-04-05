@@ -1,6 +1,7 @@
 import unittest
-from blocks import markdown_to_blocks, block_to_block_type
-from enum_types import BlockType
+from blocks import markdown_to_blocks, block_to_block_type, markdown_to_html_node
+from enum_types import BlockType, TextType
+from htmlnode import LeafNode, ParentNode
 
 class TestBlocks(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -41,6 +42,22 @@ class TestBlocks(unittest.TestCase):
     def test_ordered(self):
         text1 = "1.Item1\n2.Item2"
         self.assertEqual(block_to_block_type(text1), BlockType.OrderedList)
+
+    def test_block_to_html_node(self):
+        text1 = "1.Item1\n2.Item2"
+        self.assertEqual(
+            markdown_to_html_node(text1), 
+            ParentNode(
+                "div", 
+                [ParentNode(
+                    "ol", 
+                    [
+                        ParentNode("li", [LeafNode(None, "Item1")]), 
+                        ParentNode("li", [LeafNode(None, "Item2")])
+                    ]
+                )]
+            )
+        )
 
 if __name__ == "__main__":
     unittest.main()

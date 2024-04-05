@@ -1,15 +1,15 @@
 import re
 from textnode import TextNode, TextType
 
-def extract_markdown_images(txt):
+def extract_markdown_images(txt:str) -> list[tuple[str, str]]:
     matches = re.findall(r"!\[(.*?)\]\((.*?)\)", txt)
     return matches
 
-def extract_markdown_links(txt):
+def extract_markdown_links(txt:str) -> list[tuple[str, str]]:
     matches = re.findall(r"\[(.*?)\]\((.*?)\)", txt)
     return matches
 
-def split_nodes_image(old_nodes):
+def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
     output = []
     for old_node in old_nodes:
         matches = extract_markdown_images(old_node.text)
@@ -28,14 +28,9 @@ def split_nodes_image(old_nodes):
             output.append(TextNode(remaining_text, old_node.text_type, old_node.url))
     return output
 
-def split_node_link(old_nodes):
+def split_node_link(old_nodes: list[TextNode]) -> list[TextNode]:
     output = []
-    for old_node in old_nodes:
-        # because link pattern matches image pattern!
-        #if old_node.text_type == TextType.Images:
-            #output.append(old_node)
-            #continue
-        
+    for old_node in old_nodes:        
         matches = extract_markdown_links(old_node.text)
         if matches == []:
             output.append(old_node)
@@ -53,7 +48,7 @@ def split_node_link(old_nodes):
     return output
 
 
-def split_nodes_delimiter(old_nodes, delimiter, text_type):
+def split_nodes_delimiter(old_nodes: list[TextNode], delimiter:str, text_type:TextType) -> list[TextNode]:
     output = []
     for old_node in old_nodes:
         if type(old_node) is not TextNode:
@@ -69,7 +64,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 output.append(TextNode(split_text[i], text_type, old_node.url))
     return output
 
-def text_to_textnodes(txt):
+def text_to_textnodes(txt:str) -> list[TextNode]:
     return split_node_link(
         split_nodes_image(
             split_nodes_delimiter(
