@@ -65,7 +65,7 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
             html_list = []
             line_list = text_block.split("\n")
             for line in line_list:
-                html_node_list = raw_text_to_html_nodes(line[1:])
+                html_node_list = raw_text_to_html_nodes(line[1:].strip())
                 html_list.append(ParentNode("li", html_node_list))
             html_block_list.append(ParentNode("ul", html_list))
 
@@ -73,7 +73,7 @@ def markdown_to_html_node(markdown: str) -> ParentNode:
             html_list = []
             line_list = text_block.split("\n")
             for line in line_list:
-                html_node_list = raw_text_to_html_nodes(line[2:])
+                html_node_list = raw_text_to_html_nodes(line[2:].strip())
                 html_list.append(ParentNode("li", html_node_list))
             html_block_list.append(ParentNode("ol", html_list))
 
